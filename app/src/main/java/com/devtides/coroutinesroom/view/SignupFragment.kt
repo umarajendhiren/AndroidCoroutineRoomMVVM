@@ -1,6 +1,7 @@
 package com.devtides.coroutinesroom.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,10 +57,15 @@ class SignupFragment : Fragment() {
         val password=signupPassword.text.toString()
         val info=otherInfo.text.toString()
 
+
+
+
         if(userName.isNullOrEmpty() || password.isNullOrEmpty() || info.isNullOrEmpty()){
             Toast.makeText(activity,"Please fill all feilds",Toast.LENGTH_LONG).show()
         }
         else{
+
+
             viewModel.signup(userName,password,info)
         }
     }
