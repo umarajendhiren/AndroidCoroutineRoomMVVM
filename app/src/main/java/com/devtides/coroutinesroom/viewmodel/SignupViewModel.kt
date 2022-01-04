@@ -35,7 +35,7 @@ class SignupViewModel(application: Application) : AndroidViewModel(application) 
             else{
                 // create new user by calling insert()
 
-                val userToInsert=User(username,password.hashCode().toString(),info)
+                val userToInsert=User(username,password,info)
                 val userId=db.insertUser(userToInsert)
                 userToInsert.id=userId
 

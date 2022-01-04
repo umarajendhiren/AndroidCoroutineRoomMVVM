@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.devtides.coroutinesroom.R
+import com.devtides.coroutinesroom.model.LoginState
 import com.devtides.coroutinesroom.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -29,6 +30,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        usernameTV.setText(LoginState.user?.username)
+
         signoutBtn.setOnClickListener { onSignout() }
         deleteUserBtn.setOnClickListener { onDelete() }
 
@@ -39,20 +42,51 @@ class MainFragment : Fragment() {
     fun observeViewModel() {
         viewModel.signout.observe(this, Observer {
 
-        })
-        viewModel.userDeleted.observe(this, Observer {
+            Toast.makeText(activity, "Signed out", Toast.LENGTH_SHORT).show()
+
+            //after sign out we need to navigate to signUp fragment
+            goToSignUpFragment()
+
 
         })
+        viewModel.userDeleted.observe(this, Observer {
+            Toast.makeText(activity, "Deleted user", Toast.LENGTH_SHORT).show()
+
+            //after delete user we need to navigate to signUp fragment
+            goToSignUpFragment()
+
+
+        })
+    }
+
+    private fun goToSignUpFragment() {
+        val action = MainFragmentDirections.actionGoToSignup()
+        Navigation.findNavController(usernameTV).navigate(action)
     }
 
     private fun onSignout() {
-        val action = MainFragmentDirections.actionGoToSignup()
-        Navigation.findNavController(usernameTV).navigate(action)
+        /*val action = MainFragmentDirections.actionGoToSignup()
+        Navigation.findNavController(usernameTV).navigate(action)*/
+
+        viewModel.onSignout()
     }
 
     private fun onDelete() {
-        val action = MainFragmentDirections.actionGoToSignup()
-        Navigation.findNavController(usernameTV).navigate(action)
+        /*val action = MainFragmentDirections.actionGoToSignup()
+        Navigation.findNavController(usernameTV).navigate(action)*/
+
+
+        /*before delete user,need to show dialog if the activity is initialised and not null*/
+        activity?.let {
+            AlertDialog.Builder(it)
+                .setTitle("Delete User")
+                .setMessage("Are you sure you want to delete this user?")
+                .setPositiveButton("Yes") { p0, p1 -> viewModel.onDeleteUser() }
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show()
+
+        }
     }
 
 }

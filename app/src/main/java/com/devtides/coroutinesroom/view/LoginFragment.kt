@@ -37,21 +37,33 @@ class LoginFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.loginComplete.observe(this, Observer { isComplete ->
+            Toast.makeText(activity, "Login completed", Toast.LENGTH_SHORT).show()
 
+            val action = LoginFragmentDirections.actionGoToMain()
+            Navigation.findNavController(loginBtn).navigate(action)
         })
 
         viewModel.error.observe(this, Observer { error ->
 
-
+            Toast.makeText(activity, "ERROR:$error", Toast.LENGTH_SHORT).show()
         })
     }
 
     private fun onLogin(v: View) {
-        val action = LoginFragmentDirections.actionGoToMain()
-        Navigation.findNavController(v).navigate(action)
+        /* val action = LoginFragmentDirections.actionGoToMain()
+         Navigation.findNavController(v).navigate(action)*/
+
+        if (loginUsername.text.isNullOrEmpty() || loginPassword.text.isNullOrEmpty()) {
+            Toast.makeText(activity, "Please fill all fields", Toast.LENGTH_LONG).show()
+        } else {
+            viewModel.login(loginUsername.text.toString(), loginPassword.text.toString())
+
+        }
+
+
     }
 
-    private fun onGotoSignup(v: View){
+    private fun onGotoSignup(v: View) {
         val action = LoginFragmentDirections.actionGoToSignup()
         Navigation.findNavController(v).navigate(action)
     }
